@@ -35,13 +35,16 @@ internal static class Program
             float deltaTime = Raylib.GetFrameTime();
 
             Raylib.BeginDrawing();
-            Raylib.ClearBackground(Color.White);
+            Raylib.ClearBackground(Color.Black);
 
             // Update Game
             if (!GameMain.UpdateGame(deltaTime))
             {
                 break;
             }
+
+            // Text
+            Raylib.DrawText($"FPS: {1 / deltaTime:F2}", 20, 20, 20, Color.White);
 
             // Imgui
             UIManager.DrawUI();
