@@ -12,7 +12,7 @@ struct GameData
     public float Speed = 700;
     public float AngularSpeed = 200;
 
-    public GameData(){}
+    public GameData() { }
 }
 
 public static class GameMain
@@ -20,17 +20,28 @@ public static class GameMain
 
     static GameData gameData;
 
+    static GameMap gameMap;
+
     public static bool InitGame()
     {
         AssetManager.LoadAll();
         gameData = new();
+        gameMap = new(40, 40);
+
+        for (int x = 3; x < gameMap.Width - 3; x++)
+        {
+            for (int y = 5; y < 10; y++)
+            {
+                gameMap.GetBlockUnsafe(x, y).Type = Block.Types.Dirt;
+            }
+        }
 
         return true;
     }
 
     public static bool UpdateGame(float deltaTime)
     {
-
+        // Fixed a min delta time equal of 5 frames
         deltaTime = MathF.Min(deltaTime, 1 / 5f);
 
         Vector2 direction = Vector2.Zero;
@@ -39,9 +50,8 @@ public static class GameMain
         if (Raylib.IsKeyDown(KeyboardKey.A)) direction.X -= 1;
         if (Raylib.IsKeyDown(KeyboardKey.D)) direction.X += 1;
 
-        if (Raylib.IsKeyDown(KeyboardKey.Q)) gameData.rotation -= gameData.AngularSpeed*deltaTime;
-        if (Raylib.IsKeyDown(KeyboardKey.E)) gameData.rotation += gameData.AngularSpeed*deltaTime;
-
+        if (Raylib.IsKeyDown(KeyboardKey.Q)) gameData.rotation -= gameData.AngularSpeed * deltaTime;
+        if (Raylib.IsKeyDown(KeyboardKey.E)) gameData.rotation += gameData.AngularSpeed * deltaTime;
 
         if (Raylib.IsKeyPressed(KeyboardKey.Space)) gameData = new();
 
@@ -51,8 +61,26 @@ public static class GameMain
         }
 
         // Raylib.DrawRectangleV(gameData.Position, new Vector2(40, 40), Color.Red);
+        float size = 32;
+        for (int i = 0; i < gameMap.Width; i++)
+        {
+            for (int j = 0; j < gameMap.Height; j++)
+            {
+                // SKip all except Dirt
+                if (gameMap.GetBlockUnsafe(i, j).Type != Block.Types.Dirt) continue;
 
-        Raylib.DrawTexturePro(AssetManager.dirt, new Rectangle(0, 0, AssetManager.dirt.Dimensions), new Rectangle(gameData.Position, 100, 100), new Vector2(50, 50), gameData.rotation, Color.White);
+                float x = i * size;
+                float y = j * size;
+
+                Raylib.DrawTexturePro(
+                    AssetManager.Dirt,
+                    new Rectangle(Vector2.Zero, AssetManager.Dirt.Dimensions),
+                    new Rectangle(x, y, size, size),
+                    Vector2.Zero,
+                    0,
+                    Color.White);
+            }
+        }
 
         return true;
     }

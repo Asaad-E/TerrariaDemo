@@ -36,7 +36,7 @@ internal static class Program
             float deltaTime = Raylib.GetFrameTime();
 
             Raylib.BeginDrawing();
-            Raylib.ClearBackground(Color.Gray);
+            Raylib.ClearBackground(Color.DarkBlue);
 
             // Update Game
             if (!GameMain.UpdateGame(deltaTime))
