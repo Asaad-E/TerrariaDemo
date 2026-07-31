@@ -2,6 +2,7 @@ using System.Numerics;
 using Raylib_cs;
 
 using TerrariaDemo.Core;
+using TerrariaDemo.Helpers;
 
 namespace TerrariaDemo.GameLayer;
 

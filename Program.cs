@@ -15,6 +15,7 @@ internal static class Program
     static void Main()
     {
         // Raylib init
+        Raylib.SetConfigFlags(ConfigFlags.ResizableWindow);
         Raylib.InitWindow(1280, 720, "Test");
         Raylib.SetExitKey(KeyboardKey.Null);
         Raylib.SetTargetFPS(60);
@@ -22,8 +23,10 @@ internal static class Program
         // Imgui init
         UIManager.InitUI();
 
+        GameMain game = new();
+
         // Init game
-        if (!GameMain.InitGame())
+        if (!game.InitGame())
         {
             CloseWindow();
             return;
@@ -35,11 +38,17 @@ internal static class Program
             // New Frame
             float deltaTime = Raylib.GetFrameTime();
 
+            // Update Game
+            if (!game.Update(deltaTime))
+            {
+                break;
+            }
+
             Raylib.BeginDrawing();
             Raylib.ClearBackground(Color.DarkBlue);
 
             // Update Game
-            if (!GameMain.UpdateGame(deltaTime))
+            if (!game.Draw())
             {
                 break;
             }
@@ -53,12 +62,13 @@ internal static class Program
             Raylib.EndDrawing();
         }
 
+        game.CloseGame();
         CloseWindow();
     }
 
     public static void CloseWindow()
     {
-        GameMain.CloseGame();
+        AssetManager.UnloadAssets();
         UIManager.CloseUI();
         Raylib.CloseWindow();
     }

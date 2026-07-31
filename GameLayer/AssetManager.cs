@@ -8,13 +8,25 @@ public static class AssetManager
 {
     public static Texture2D Dirt;
 
+    public static Texture2D TextureAtlas;
+
     public static void LoadAll()
     {
         Dirt = Raylib.LoadTexture(Path.Combine(AppContext.BaseDirectory, "Resources", "dirt.png"));
+
+        TextureAtlas = Raylib.LoadTexture(Path.Combine(AppContext.BaseDirectory, "Resources", "textures2.png"));
     }
 
-    public static void ClearAll()
+
+    public static Rectangle GetRectForAtlas(int x, int y, int SizeX, int SizeY)
+    {
+        return new Rectangle(x*SizeX, y*SizeY, SizeX, SizeY);
+    }
+
+    public static void UnloadAssets()
     {
         Raylib.UnloadTexture(Dirt);
+                Raylib.UnloadTexture(TextureAtlas);
+
     }
 }
