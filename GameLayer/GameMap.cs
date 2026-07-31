@@ -38,6 +38,7 @@ public struct GameMap
     }
     public readonly Block GetBlockUnsafe(int x, int y)
     {
+        CustomAssert.Check(mapData is not null, "Map data not initialized");
         CustomAssert.Check(mapData.Length == Width * Height, "Map data not initialized");
 
         CustomAssert.Check(x >= 0 && x < Width && y >= 0 && y < Height, "getBlockUnsafe out of bounds error");
