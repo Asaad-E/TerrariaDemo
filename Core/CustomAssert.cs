@@ -74,7 +74,7 @@ public static class CustomAssert
         // Close OpenGL context cleanly before popping up the dialog
         if (Raylib.IsWindowReady())
         {
-            Raylib.CloseWindow();
+            Program.CloseWindow();
         }
 
         // Pop up the OS error window

@@ -5,6 +5,7 @@ using Raylib_cs;
 using rlImGui_cs;
 
 using TerrariaDemo.GameLayer;
+using TerrariaDemo.Core;
 
 namespace TerrariaDemo;
 
@@ -35,7 +36,7 @@ internal static class Program
             float deltaTime = Raylib.GetFrameTime();
 
             Raylib.BeginDrawing();
-            Raylib.ClearBackground(Color.Black);
+            Raylib.ClearBackground(Color.Gray);
 
             // Update Game
             if (!GameMain.UpdateGame(deltaTime))
@@ -55,7 +56,7 @@ internal static class Program
         CloseWindow();
     }
 
-    static void CloseWindow()
+    public static void CloseWindow()
     {
         GameMain.CloseGame();
         UIManager.CloseUI();
