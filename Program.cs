@@ -54,7 +54,8 @@ internal static class Program
             }
 
             // Text
-            Raylib.DrawText($"FPS: {1 / deltaTime:F2}", 20, 20, 20, Color.White);
+            // Raylib.DrawText($"FPS: {1 / deltaTime:F2}", 20, 20, 20, Color.White);
+            Raylib.DrawFPS(20, 20);
 
             // Imgui
             UIManager.DrawUI();
