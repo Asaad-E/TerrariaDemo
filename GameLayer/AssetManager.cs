@@ -7,14 +7,15 @@ namespace TerrariaDemo.GameLayer;
 public static class AssetManager
 {
     public static Texture2D Dirt;
-
     public static Texture2D TextureAtlas;
+    public static Texture2D Frame  ;
+
 
     public static void LoadAll()
     {
         Dirt = Raylib.LoadTexture(Path.Combine(AppContext.BaseDirectory, "Resources", "dirt.png"));
-
         TextureAtlas = Raylib.LoadTexture(Path.Combine(AppContext.BaseDirectory, "Resources", "textures2.png"));
+        Frame = Raylib.LoadTexture(Path.Combine(AppContext.BaseDirectory, "Resources", "frame.png"));
     }
 
 

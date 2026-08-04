@@ -8,6 +8,8 @@ public class GameState()
 {
     public Camera2D Camera;
     public GameMap Map;
+
+    public int CursorX, CursorY;
 }
 
 public class GameMain
@@ -51,8 +53,33 @@ public class GameMain
         // Fixed a min delta time equal of 5 frames
         deltaTime = MathF.Min(deltaTime, 1 / 5f);
 
-        // Todo: change only when resize
+        // To do: change only when resize
         State.Camera.Offset = new Vector2(Raylib.GetScreenWidth() / 2, Raylib.GetScreenHeight() * 0.4f);
+
+        // Cursor
+        Vector2 mousePos = Raylib.GetScreenToWorld2D(Raylib.GetMousePosition(), State.Camera);
+        State.CursorX = (int)MathF.Floor(mousePos.X);
+        State.CursorY = (int)MathF.Floor(mousePos.Y);
+
+        // Add Block
+
+        if (Raylib.IsMouseButtonPressed(MouseButton.Left))
+        {
+            Block? selectedBlock = State.Map.GetBlockSafe(State.CursorX, State.CursorY);
+            if(selectedBlock is not null)
+            {
+                selectedBlock.Type = Block.Types.SandRuby;
+            }
+        }
+
+        if (Raylib.IsMouseButtonPressed(MouseButton.Right))
+        {
+            Block? selectedBlock = State.Map.GetBlockSafe(State.CursorX, State.CursorY);
+            if(selectedBlock is not null)
+            {
+                State.Map.ClearBlock(State.CursorX, State.CursorY);
+            }
+        }
 
 
         Vector2 direction = Vector2.Zero;
@@ -70,6 +97,8 @@ public class GameMain
     {
         Raylib.BeginMode2D(State.Camera);
 
+
+        // Draw map
         for (int i = 0; i < State.Map.Width; i++)
         {
             for (int j = 0; j < State.Map.Height; j++)
@@ -92,8 +121,15 @@ public class GameMain
             }
         }
 
+        // Draw cursor
+        Raylib.DrawTexturePro(
+            AssetManager.Frame,
+            new Rectangle(0, 0, Block.Size, Block.Size),
+            new Rectangle(State.CursorX, State.CursorY, 1, 1),
+            Vector2.Zero,
+                0,
+            Color.White);
         Raylib.EndMode2D();
-
 
         return true;
     }
