@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿using System;
 using System.Numerics;
 using ImGuiNET;
@@ -33,11 +34,27 @@ internal static class Program
         }
 
         // Main Loop
+=======
+﻿
+using Raylib_cs;
+
+namespace TerrariaDemo;
+
+class Program
+{
+    
+    static void Main()
+    {
+        Raylib.InitWindow(720, 480, "Test");
+        Raylib.SetTargetFPS(60);
+
+>>>>>>> 8891344 (first commint)
         while (!Raylib.WindowShouldClose())
         {
             // New Frame
             float deltaTime = Raylib.GetFrameTime();
 
+<<<<<<< HEAD
             // Update Game
             if (!game.Update(deltaTime))
             {
@@ -72,5 +89,16 @@ internal static class Program
         AssetManager.UnloadAssets();
         UIManager.CloseUI();
         Raylib.CloseWindow();
+=======
+
+            Raylib.BeginDrawing();
+            Raylib.ClearBackground(Color.White);
+
+
+            Raylib.DrawText($"FPS: {1/deltaTime:F2}", 20, 20, 20, Color.Black);
+
+            Raylib.EndDrawing();
+        }
+>>>>>>> 8891344 (first commint)
     }
 }
