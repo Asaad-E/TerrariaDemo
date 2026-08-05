@@ -28,29 +28,21 @@ public class GameMain
 
         // init word
         State.Map = new(700, 700);
-        State.Map.GetBlockUnsafe(0, 0).Type = Block.Types.Dirt;
-        State.Map.GetBlockUnsafe(1, 1).Type = Block.Types.GrassBlock;
-        State.Map.GetBlockUnsafe(2, 2).Type = Block.Types.Stone;
-        State.Map.GetBlockUnsafe(3, 3).Type = Block.Types.PoisonBlock;
+        State.Map.GetBlockUnsafe(0, 0).SetType(Block.Types.Dirt);
+        State.Map.GetBlockUnsafe(0, 1).SetType(Block.Types.GrassBlock);
+        State.Map.GetBlockUnsafe(0, 2).SetType(Block.Types.Stone);
+        State.Map.GetBlockUnsafe(0, 3).SetType(Block.Types.Stone);
 
         for (int x = 3; x < State.Map.Width - 3; x++)
         {
-            State.Map.GetBlockUnsafe(x, 4).Type = Block.Types.GrassBlock;
+            State.Map.GetBlockUnsafe(x, 9).SetType(Block.Types.GrassBlock);
         }
 
         for (int x = 3; x < State.Map.Width - 3; x++)
         {
-            for (int y = 5; y < 10; y++)
+            for (int y = 10; y < 15; y++)
             {
-                State.Map.GetBlockUnsafe(x, y).Type = Block.Types.Dirt;
-            }
-        }
-
-        for (int x = 0; x < State.Map.Width; x++)
-        {
-            for (int y = 0; y < State.Map.Height; y++)
-            {
-                State.Map.GetBlockUnsafe(x, y).Type = Block.Types.Dirt;
+                State.Map.GetBlockUnsafe(x, y).SetType(Block.Types.Dirt);
             }
         }
 
@@ -62,7 +54,7 @@ public class GameMain
         deltaTime = MathF.Min(deltaTime, 1 / 5f);
 
         // To do: change only when resize
-        State.Camera.Offset = new Vector2(Raylib.GetScreenWidth() / 2, Raylib.GetScreenHeight() /2);
+        State.Camera.Offset = new Vector2(Raylib.GetScreenWidth() / 2, Raylib.GetScreenHeight() / 2);
 
         // Cursor
         Vector2 mousePos = Raylib.GetScreenToWorld2D(Raylib.GetMousePosition(), State.Camera);
@@ -73,19 +65,38 @@ public class GameMain
 
         if (Raylib.IsMouseButtonPressed(MouseButton.Left))
         {
-            Block? selectedBlock = State.Map.GetBlockSafe(State.CursorX, State.CursorY);
+            // Block? selectedBlock = State.Map.GetBlockSafe(State.CursorX, State.CursorY);
+            // if (selectedBlock is not null)
+            // {
+            //     selectedBlock.Type = Block.Types.SandRuby;
+            // }
+
+            State.Map.SpawnTree(State.CursorX, State.CursorY);
+        }
+
+        if (Raylib.IsMouseButtonPressed(MouseButton.Middle))
+        {
+            Block? selectedBlock = State.Map.GetWallUnsafe(State.CursorX, State.CursorY);
             if (selectedBlock is not null)
             {
-                selectedBlock.Type = Block.Types.SandRuby;
+                selectedBlock.SetType(Block.Types.StoneBricksWall);
             }
         }
 
         if (Raylib.IsMouseButtonPressed(MouseButton.Right))
         {
             Block? selectedBlock = State.Map.GetBlockSafe(State.CursorX, State.CursorY);
-            if (selectedBlock is not null)
+            if (selectedBlock is not null && selectedBlock?.Type != Block.Types.Air)
             {
                 State.Map.ClearBlock(State.CursorX, State.CursorY);
+            }
+            else
+            {
+                Block? selectedWall = State.Map.GetWallSafe(State.CursorX, State.CursorY);
+                if (selectedWall is not null && selectedWall?.Type != Block.Types.Air)
+                {
+                    State.Map.ClearWalk(State.CursorX, State.CursorY);
+                }
             }
         }
 
@@ -103,7 +114,7 @@ public class GameMain
     }
     public bool Draw()
     {
-
+        // Get coord of the screen rectangle
         Vector2 topLeft = Raylib.GetScreenToWorld2D(Vector2.Zero, State.Camera);
         Vector2 bootmRigth = Raylib.GetScreenToWorld2D(new Vector2((float)Raylib.GetScreenWidth(), (float)Raylib.GetScreenHeight()), State.Camera);
 
@@ -119,31 +130,54 @@ public class GameMain
         bootmRigthX = (int)Raymath.Clamp(bootmRigthX, 0, State.Map.Width - 1);
         bootmRigthY = (int)Raymath.Clamp(bootmRigthY, 0, State.Map.Height - 1);
 
-
-
         Raylib.BeginMode2D(State.Camera);
+
+        // Draw wall
+        for (int x = topLeftX; x < bootmRigthX; x++)
+        {
+            for (int y = topLeftY; y < bootmRigthY; y++)
+            {
+                Block CurrentWall = State.Map.GetWallUnsafe(x, y);
+
+                // SKip air
+                if (CurrentWall.Type == Block.Types.Air) continue;
+
+                Raylib.DrawTexturePro(
+                        AssetManager.TextureAtlas,
+                        AssetManager.GetRectForAtlas((int)CurrentWall.Type, CurrentWall.Variation, Block.Size, Block.Size),
+                        new Rectangle(x, y, 1, 1),
+                        Vector2.Zero,
+                        0,
+                        Color.White);
+            }
+        }
 
 
         // Draw map
-        for (int i = topLeftX; i < bootmRigthX; i++)
+        for (int x = topLeftX; x < bootmRigthX; x++)
         {
-            for (int j = topLeftY; j < bootmRigthY; j++)
+            for (int y = topLeftY; y < bootmRigthY; y++)
             {
-                Block CurrentBlock = State.Map.GetBlockUnsafe(i, j);
+                Block CurrentBlock = State.Map.GetBlockUnsafe(x, y);
 
                 // SKip air
                 if (CurrentBlock.Type == Block.Types.Air) continue;
 
-                float x = i;
-                float y = j;
 
-                Raylib.DrawTexturePro(
-                    AssetManager.TextureAtlas,
-                    AssetManager.GetRectForAtlas((int)CurrentBlock.Type, CurrentBlock.Variation, Block.Size, Block.Size),
-                    new Rectangle(x, y, 1, 1),
-                    Vector2.Zero,
-                    0,
-                    Color.White);
+                if (CurrentBlock.Type == Block.Types.WoodLog)
+                {
+                    DrawCustomWoodLog(x, y, CurrentBlock.Variation);
+                }
+                else
+                {
+                    Raylib.DrawTexturePro(
+                        AssetManager.TextureAtlas,
+                        AssetManager.GetRectForAtlas((int)CurrentBlock.Type, CurrentBlock.Variation, Block.Size, Block.Size),
+                        new Rectangle(x, y, 1, 1),
+                        Vector2.Zero,
+                        0,
+                        Color.White);
+                }
             }
         }
 
@@ -159,6 +193,62 @@ public class GameMain
 
         return true;
     }
+
+    public void DrawCustomWoodLog(int x, int y, int variationH)
+    {
+        int variation = 0;
+
+        // If the log it is a border of the map, draw the default variation
+        if (x - 1 < 0 || x + 1 > State.Map.Width || y - 1 < 0 || y + 1 > State.Map.Height)
+        {
+        }
+        // The base
+        else if (State.Map.GetBlockUnsafe(x, y + 1).Type != Block.Types.WoodLog && State.Map.GetBlockUnsafe(x, y + 1).Type != Block.Types.Air)
+        {
+            // Base sprite;
+
+            if (State.Map.GetBlockUnsafe(x, y - 1).Type == Block.Types.Air)
+            {
+                variation = 7;
+            }
+            else
+            {
+                variation = 4;
+            }
+        }
+        // Main body
+        else
+        {
+            bool top = false;
+            bool left = false;
+            bool rigth = false;
+
+            if (State.Map.GetBlockUnsafe(x - 1, y).Type == Block.Types.Leaves) left = true;
+            if (State.Map.GetBlockUnsafe(x + 1, y).Type == Block.Types.Leaves) rigth = true;
+            if (State.Map.GetBlockUnsafe(x, y - 1).Type == Block.Types.Leaves) top = true;
+
+
+            variation = (top, left, rigth) switch
+            {
+                (true, true, true) => 5,
+                (false, false, true) => 2,
+                (true, false, true) => 2,
+                (false, true, false) => 3,
+                (true, true, false) => 3,
+                (false, false, false) => 0,
+                _ => 0
+            };
+        }
+
+        Raylib.DrawTexturePro(
+            AssetManager.TreeAtlas,
+            AssetManager.GetRectForAtlas(variation, variationH, Block.Size, Block.Size),
+            new Rectangle(x, y, 1, 1),
+            Vector2.Zero,
+            0,
+            Color.White);
+    }
+
     public void CloseGame()
     {
         Console.WriteLine("---------------- Game Closed ----------------");

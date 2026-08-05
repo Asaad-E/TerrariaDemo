@@ -64,16 +64,40 @@ public class Block
         BoneWordrobe,
         BoneBookShelf,
         BonePlatform,
-        PoisonBlock,
+        DirtWall,
+        StoneWall,
+        WoodWall,
+        SandStoneWall,
+        BrickWall,
+        GlassWall,
+        CopperBlockWall,
+        SilverBlockWall,
+        GoldBlockWall,
+        SnowWall,
+        SandWall,
+        StoneBricksWall,
+        RubyBlockWall,
+        HeroglyphWall,
+        BlueRubyWall,
+        PlankedWall,
+        SnowBrickWall,
+        BoneBrickWall,
         BlockCount
     }
 
     public const int Size = 32;
-    public Types Type = Types.Air;
+    public Types Type { get; private set; } = Types.Air;
     public int Variation = 0;
 
     public Block()
     {
+        Type = Types.Air;
+        Variation = RandomGen.NextInt(0, 4);
+    }
+
+    public void SetType(Types type)
+    {
+        Type = type;
         Variation = RandomGen.NextInt(0, 4);
     }
 }
