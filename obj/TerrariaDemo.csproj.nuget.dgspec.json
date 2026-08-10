@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Lenovo\\Personal\\C_SHARP\\TerrariaDemo\\TerrariaDemo.csproj": {}
+    "C:\\Users\\Lenovo\\Personal\\C_SHARP\\Projects\\TerrariaDemo\\TerrariaDemo.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Lenovo\\Personal\\C_SHARP\\TerrariaDemo\\TerrariaDemo.csproj": {
+    "C:\\Users\\Lenovo\\Personal\\C_SHARP\\Projects\\TerrariaDemo\\TerrariaDemo.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Lenovo\\Personal\\C_SHARP\\TerrariaDemo\\TerrariaDemo.csproj",
+        "projectUniqueName": "C:\\Users\\Lenovo\\Personal\\C_SHARP\\Projects\\TerrariaDemo\\TerrariaDemo.csproj",
         "projectName": "TerrariaDemo",
-        "projectPath": "C:\\Users\\Lenovo\\Personal\\C_SHARP\\TerrariaDemo\\TerrariaDemo.csproj",
+        "projectPath": "C:\\Users\\Lenovo\\Personal\\C_SHARP\\Projects\\TerrariaDemo\\TerrariaDemo.csproj",
         "packagesPath": "C:\\Users\\Lenovo\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Lenovo\\Personal\\C_SHARP\\TerrariaDemo\\obj\\",
+        "outputPath": "C:\\Users\\Lenovo\\Personal\\C_SHARP\\Projects\\TerrariaDemo\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Lenovo\\AppData\\Roaming\\NuGet\\NuGet.Config"

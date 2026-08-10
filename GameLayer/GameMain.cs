@@ -124,11 +124,11 @@ public class GameMain
         int bootmRigthY = (int)MathF.Floor(bootmRigth.Y + 1);
 
 
-        topLeftX = (int)Raymath.Clamp(topLeftX, 0, State.Map.Width - 1);
-        topLeftY = (int)Raymath.Clamp(topLeftY, 0, State.Map.Height - 1);
+        topLeftX = (int)Math.Clamp(topLeftX, 0, State.Map.Width - 1);
+        topLeftY = (int)Math.Clamp(topLeftY, 0, State.Map.Height - 1);
 
-        bootmRigthX = (int)Raymath.Clamp(bootmRigthX, 0, State.Map.Width - 1);
-        bootmRigthY = (int)Raymath.Clamp(bootmRigthY, 0, State.Map.Height - 1);
+        bootmRigthX = (int)Math.Clamp(bootmRigthX, 0, State.Map.Width - 1);
+        bootmRigthY = (int)Math.Clamp(bootmRigthY, 0, State.Map.Height - 1);
 
         Raylib.BeginMode2D(State.Camera);
 
