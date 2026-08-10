@@ -4,18 +4,28 @@ using Raylib_cs;
 
 namespace TerrariaDemo.GameLayer;
 
-public class GameState()
+public class GameState
 {
     public Camera2D Camera;
     public GameMap Map;
-
+    public int Seed;
     public int CursorX, CursorY;
+    public RandomGenerator RGN;
+
+    public GameState(int seed)
+    {
+        RGN = new(seed);
+    }
 }
 
 public class GameMain
 {
-    readonly GameState State = new();
-    public GameMain() { }
+    readonly GameState State;
+    public GameMain()
+    {
+        State = new(8);
+    }
+
     public bool InitGame()
     {
         // load asset
@@ -23,28 +33,30 @@ public class GameMain
 
         State.Camera.Target = Vector2.Zero;
         State.Camera.Rotation = 0f;
-        State.Camera.Zoom = 40;
-
+        State.Camera.Zoom = 8;
 
         // init word
-        State.Map = new(700, 700);
-        State.Map.GetBlockUnsafe(0, 0).SetType(Block.Types.Dirt);
-        State.Map.GetBlockUnsafe(0, 1).SetType(Block.Types.GrassBlock);
-        State.Map.GetBlockUnsafe(0, 2).SetType(Block.Types.Stone);
-        State.Map.GetBlockUnsafe(0, 3).SetType(Block.Types.Stone);
 
-        for (int x = 3; x < State.Map.Width - 3; x++)
-        {
-            State.Map.GetBlockUnsafe(x, 9).SetType(Block.Types.GrassBlock);
-        }
+        State.Map = WorldGenerator.GenerateWorld(1000, 60, State.RGN);
 
-        for (int x = 3; x < State.Map.Width - 3; x++)
-        {
-            for (int y = 10; y < 15; y++)
-            {
-                State.Map.GetBlockUnsafe(x, y).SetType(Block.Types.Dirt);
-            }
-        }
+        // State.Map = new(700, 700, State.RGN);
+        State.Map.GetBlockUnsafe(0, 0).SetType(Block.Types.SandRuby);
+        // State.Map.GetBlockUnsafe(0, 1).SetType(Block.Types.GrassBlock);
+        // State.Map.GetBlockUnsafe(0, 2).SetType(Block.Types.Stone);
+        // State.Map.GetBlockUnsafe(0, 3).SetType(Block.Types.Stone);
+
+        // for (int x = 3; x < State.Map.Width - 3; x++)
+        // {
+        //     State.Map.GetBlockUnsafe(x, 9).SetType(Block.Types.GrassBlock);
+        // }
+
+        // for (int x = 3; x < State.Map.Width - 3; x++)
+        // {
+        //     for (int y = 10; y < 15; y++)
+        //     {
+        //         State.Map.GetBlockUnsafe(x, y).SetType(Block.Types.Dirt);
+        //     }
+        // }
 
         return true;
     }
@@ -102,13 +114,15 @@ public class GameMain
 
 
         Vector2 direction = Vector2.Zero;
-        if (Raylib.IsKeyDown(KeyboardKey.W)) State.Camera.Target.Y -= deltaTime * 10;
-        if (Raylib.IsKeyDown(KeyboardKey.A)) State.Camera.Target.X -= deltaTime * 10;
-        if (Raylib.IsKeyDown(KeyboardKey.S)) State.Camera.Target.Y += deltaTime * 10;
-        if (Raylib.IsKeyDown(KeyboardKey.D)) State.Camera.Target.X += deltaTime * 10;
+        float cameraSpeed= 80;
+        if (Raylib.IsKeyDown(KeyboardKey.W)) State.Camera.Target.Y -= deltaTime * cameraSpeed;
+        if (Raylib.IsKeyDown(KeyboardKey.A)) State.Camera.Target.X -= deltaTime * cameraSpeed;
+        if (Raylib.IsKeyDown(KeyboardKey.S)) State.Camera.Target.Y += deltaTime * cameraSpeed;
+        if (Raylib.IsKeyDown(KeyboardKey.D)) State.Camera.Target.X += deltaTime * cameraSpeed;
 
         if (Raylib.IsKeyDown(KeyboardKey.Q)) State.Camera.Zoom -= 1f;
         if (Raylib.IsKeyDown(KeyboardKey.E)) State.Camera.Zoom += 1f;
+        // State.Camera.Zoom = Math.Clamp(State.Camera.Zoom, 20, 60);
 
         return true;
     }
@@ -132,7 +146,7 @@ public class GameMain
 
         Raylib.BeginMode2D(State.Camera);
 
-        // Draw wall
+        // Draw walls
         for (int x = topLeftX; x < bootmRigthX; x++)
         {
             for (int y = topLeftY; y < bootmRigthY; y++)

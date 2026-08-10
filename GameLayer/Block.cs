@@ -89,15 +89,14 @@ public class Block
     public Types Type { get; private set; } = Types.Air;
     public int Variation = 0;
 
-    public Block()
+    public Block(RandomGenerator RNG)
     {
         Type = Types.Air;
-        Variation = RandomGen.NextInt(0, 4);
+        Variation = RNG.NextIntRange(0, 4);
     }
 
     public void SetType(Types type)
     {
         Type = type;
-        Variation = RandomGen.NextInt(0, 4);
     }
 }

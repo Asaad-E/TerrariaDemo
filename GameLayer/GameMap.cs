@@ -15,11 +15,13 @@ public struct GameMap
     public Block[] Data;
     public Block[] WallData;
 
+    public RandomGenerator RGN;
 
-    public GameMap(int w, int h)
+    public GameMap(int w, int h, RandomGenerator RGN)
     {
         Width = w;
         Height = h;
+        this.RGN = RGN;
 
         Data = new Block[w * h];
         WallData = new Block[w * h];
@@ -28,8 +30,8 @@ public struct GameMap
         // Initialize each block to deafult
         for (int i = 0; i < Width * Height; i++)
         {
-            Data[i] = new();
-            WallData[i] = new();
+            Data[i] = new(RGN);
+            WallData[i] = new(RGN);
         }
     }
 
@@ -70,12 +72,12 @@ public struct GameMap
 
     public readonly void ClearBlock(int x, int y)
     {
-        Data[x + y * Width] = new();
+        Data[x + y * Width] = new(RGN);
     }
 
     public readonly void ClearWalk(int x, int y)
     {
-        WallData[x + y * Width] = new();
+        WallData[x + y * Width] = new(RGN);
 
     }
 
